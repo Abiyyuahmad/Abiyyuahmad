@@ -38,16 +38,8 @@ package Pempek;
    
       private static double lateralDirection;
       private static double lastEnemyVelocity;
-   
-    // We must keep track of the enemy's energy level to detect EnergyDrop,
-    // indicating a bullet is fired
+  
       public static double _oppEnergy = 100.0;
-   
-    // This is a rectangle that represents an 800x600 battle field,
-    // used for a simple, iterative WallSmoothing method (by Kawigi).
-    // If you're not familiar with WallSmoothing, the wall stick indicates
-    // the amount of space we try to always have on either end of the tank
-    // (extending straight out the front or back) before touching a wall.
       public static Rectangle2D.Double _fieldRect
         = new java.awt.geom.Rectangle2D.Double(18, 18, 764, 564);
       public  ArrayList goToTargets;
@@ -100,10 +92,7 @@ package Pempek;
          setAdjustRadarForRobotTurn(true);
       
          do {
-            // basic mini-radar code
-            //if(_oppEnergy < 10)
-               //doSurfing();
-            if(Math.abs(getRadarTurnRemaining())  < 0.000001 && getOthers() > 0){
+                if(Math.abs(getRadarTurnRemaining())  < 0.000001 && getOthers() > 0){
                if(getTime() > 9 )
                   System.out.println("Lost radar lock");
                setTurnRadarRightRadians(Double.POSITIVE_INFINITY);
@@ -158,15 +147,6 @@ package Pempek;
             ew.directAngle = ((Double)_surfAbsBearings.get(2)).doubleValue();
             ew.fireLocation = (Point2D.Double)_enemyLocation.clone(); // last tick
             
-         
-           //  ArrayList forwardPoints = predictPositions(ew,ew.direction, MAX_GF);
-         //    ArrayList reversePoints = predictPositions(ew,-ew.direction, MAX_GF);
-         // 
-         //    Point2D.Double maxF = (Point2D.Double)forwardPoints.get(forwardPoints.size() - 1);
-         //    Point2D.Double maxR = (Point2D.Double)reversePoints.get(reversePoints.size() - 1);
-         // 
-         //    ew.maxFangle = Math.abs(Utils.normalRelativeAngle(ew.directAngle - absoluteBearing(_enemyLocation, maxF)));
-         //    ew.maxRangle = Math.abs(Utils.normalRelativeAngle(ew.directAngle - absoluteBearing(_enemyLocation, maxR)));
             ew.maxFangle = maxEscapeAngle(ew.bulletVelocity);
             ew.maxRangle = maxEscapeAngle(ew.bulletVelocity);
          
@@ -177,8 +157,6 @@ package Pempek;
                
          _oppEnergy = e.getEnergy();
       
-        // update after EnemyWave detection, because that needs the previous
-        // enemy location as the source of the wave
          _enemyLocation = project(_myLocation, absBearing, e.getDistance());
       
          updateWaves();
@@ -186,12 +164,6 @@ package Pempek;
          doSurfing(); 
       
       
-         // double radarTurn = Math.sin(absBearing - getRadarHeadingRadians());
-         // radarTurn += Math.signum(radarTurn)*Math.atan(25/e.getDistance());
-         // double MAX_RADAR_TURN = Math.PI/4 - Math.PI/8 - Math.PI/18;
-         // radarTurn = limit(-MAX_RADAR_TURN, radarTurn, MAX_RADAR_TURN);
-      //    
-         // setTurnRadarRightRadians(radarTurn );
          
         raikoGun.onScannedRobot(e);
         if(getRoundNum() < 5)  
@@ -292,12 +264,10 @@ package Pempek;
                _enemyWaves.remove(x);
                x--;
                
-               // logHit(ew,_myLocation,flattenerWeight);
             	
             	
             }
             else if(Math.abs(ew.distanceTraveled - ew.bulletVelocity*2) < 0.001)
-            //  && _myLocation.distance(_enemyLocation) < 300)
                surfStatsChanged = true;
          }
       }
@@ -352,12 +322,6 @@ package Pempek;
          statBuffers.add(new StatBuffer(velSlicesFine,distSlicesRough,tsdcSlicesFine,empty,empty,empty));
          statBuffers.add(new StatBuffer(velSlicesFine,distSlices,tsdcSlicesFine,empty,empty,empty));
          statBuffers.add(new StatBuffer(velSlicesFine,distSlicesFine,tsdcSlicesFine,empty,empty,empty));
-      	
-         // statBuffers.add(new StatBuffer(velSlicesRough,distSlicesRough,empty,accelSlices,empty,empty));
-         // statBuffers.add(new StatBuffer(velSlices,distSlicesRough,empty,accelSlices,empty,empty));
-         // statBuffers.add(new StatBuffer(velSlices,distSlices,empty,accelSlices,empty,empty));
-         // statBuffers.add(new StatBuffer(velSlicesFine,distSlices,empty,accelSlices,empty,empty));
-         // statBuffers.add(new StatBuffer(velSlicesFine,distSlicesFine,empty,accelSlices,empty,empty));
          statBuffers.add(new StatBuffer(velSlices,distSlices,tsdcSlicesRough,accelSlices,empty,empty));
          statBuffers.add(new StatBuffer(velSlices,distSlices,tsdcSlices,accelSlices,empty,empty));
          statBuffers.add(new StatBuffer(velSlicesRough,distSlicesRough,tsdcSlicesFine,accelSlices,empty,empty));
@@ -374,10 +338,6 @@ package Pempek;
          statBuffers.add(new StatBuffer(velSlices,distSlices,empty,empty,tsvcSlicesFine,empty));
          statBuffers.add(new StatBuffer(velSlicesFine,distSlices,empty,empty,tsvcSlicesFine,empty));
          statBuffers.add(new StatBuffer(velSlicesFine,distSlicesFine,empty,empty,tsvcSlicesFine,empty));
-      //    statBuffers.add(new StatBuffer(velSlicesRough,distSlicesRough,tsdcSlicesRough,empty,tsvcSlicesRough,empty));
-      //    statBuffers.add(new StatBuffer(velSlices,distSlicesRough,tsdcSlicesRough,empty,tsvcSlicesRough,empty));
-      //    statBuffers.add(new StatBuffer(velSlices,distSlices,tsdcSlices,empty,tsvcSlices,empty));
-      //    statBuffers.add(new StatBuffer(velSlices,distSlices,tsdcSlices,accelSlices,tsvcSlices,empty));
           
          statBuffers.add(new StatBuffer(velSlicesRough,empty,empty,empty,empty,dl20SlicesRough));
          statBuffers.add(new StatBuffer(velSlicesRough,empty,empty,empty,empty,dl20Slices));
@@ -420,8 +380,6 @@ package Pempek;
          return surfWave;
       }
    
-    // Given the EnemyWave that the bullet was on, and the point where we
-    // were hit, calculate the index into our stat array for that factor.
        public static int getFactorIndex(EnemyWave ew, Point2D.Double targetLocation) {
          double offsetAngle = Utils.normalRelativeAngle(absoluteBearing(ew.fireLocation, targetLocation)
             - ew.directAngle)*ew.direction;
@@ -434,9 +392,6 @@ package Pempek;
             (factor * ((BINS - 1) / 2)) + ((BINS - 1) / 2),
             BINS - 1);
       }
-   
-    // Given the EnemyWave that the bullet was on, and the point where we
-    // were hit, update our stat array to reflect the danger in that area.
        public void logHit(EnemyWave ew, Point2D.Double targetLocation, double weight) {
          int index = getFactorIndex(ew, targetLocation);
       
@@ -471,12 +426,10 @@ package Pempek;
                 e.getBullet().getX(), e.getBullet().getY());
             EnemyWave hitWave;
          
-            // look through the EnemyWaves, and find one that could've hit the bullet
             hitWave = getCollisionWave(hitBulletLocation,e.getHitBullet().getPower());
          
             if (hitWave != null) {
                logHit(hitWave, hitBulletLocation,1);
-                // We can remove this wave now, of course.
                _enemyWaves.remove(_enemyWaves.lastIndexOf(hitWave));
                
             }
@@ -486,23 +439,16 @@ package Pempek;
       }
       @Override
        public void onHitByBullet(HitByBulletEvent e) {
-        // If the _enemyWaves collection is empty, we must have missed the
-        // detection of this wave somehow.
          if (!_enemyWaves.isEmpty()) {
             Bullet bullet = e.getBullet();
             Point2D.Double hitBulletLocation = new Point2D.Double(
                 e.getBullet().getX(), e.getBullet().getY());
             EnemyWave hitWave;
-         
-            // look through the EnemyWaves, and find one that could've hit us.
             hitWave = getCollisionWave(_myLocation,e.getBullet().getPower());
             if (hitWave != null) {
-               // hitBulletLocation = 
-                  // project(hitWave.fireLocation, bullet.getHeading(), hitWave.distanceTraveled);
             
                logHit(hitWave, hitBulletLocation,1);
             
-                // We can remove this wave now, of course.
                _enemyWaves.remove(_enemyWaves.lastIndexOf(hitWave));
             }
          }
@@ -526,8 +472,6 @@ package Pempek;
          return null;
       }
    
-    // CREDIT: mini sized predictor from Apollon, by rozu
-    // http://robowiki.net?Apollon
        public ArrayList predictPositions(EnemyWave surfWave, int direction, int MODE) {
          Point2D.Double predictedPosition = new Point2D.Double(getX(), getY());
          ArrayList positions = new ArrayList();
@@ -540,21 +484,10 @@ package Pempek;
          boolean intercepted = false;
       
          do {
-         //keeps a distance of 500
-            //prefOffset = Math.PI/2;//(0.00154*surfWave.fireLocation.distance(predictedPosition) + 0.8);
             double enemyDistance = _enemyLocation.distance(predictedPosition);
          
             prefOffset = Math.PI/2;// - 1 + limit(350,enemyDistance, 800)/600;
             double absBearing;
-            // if(enemyDistance > 300)
-               // absBearing = absoluteBearing(
-                  // // _enemyLocation
-                  // surfWave.fireLocation
-                  // ,
-                  // //  predictedPosition
-                  // _myLocation    
-                  // );
-            // else {
             absBearing = absoluteBearing(
                 //   _enemyLocation
                   surfWave.fireLocation
@@ -565,7 +498,6 @@ package Pempek;
                	 predictedPosition   
                   );
             prefOffset = Math.PI/2 - 1 + limit(200,enemyDistance,900)/400;
-            // }
          
             moveAngle =
                 wallSmoothing(predictedPosition, absBearing+ (direction * prefOffset), direction)
@@ -585,17 +517,11 @@ package Pempek;
             predictedHeading = Utils.normalRelativeAngle(predictedHeading
                 + limit(-maxTurning, moveAngle, maxTurning));
          
-         // this one is nice ;). if predictedVelocity and moveDir have
-            // different signs you want to brake down
-         // otherwise you want to accelerate (look at the factor "2")
-            // predictedVelocity += (predictedVelocity * moveDir < 0 ? 2*moveDir : moveDir);
          	
             double velAddition = (predictedVelocity * moveDir < 0 ? 2*moveDir : moveDir);
             
             
             predictedVelocity = limit(-8, predictedVelocity + velAddition, 8);
-            
-         // calculate the new predicted position
             predictedPosition = project(predictedPosition, predictedHeading, predictedVelocity);
          
             positions.add(predictedPosition);
@@ -618,8 +544,6 @@ package Pempek;
                      Point2D.Double stopPosition = project(predictedPosition, predictedHeading, -2*Math.signum(predictedVelocity));
                      positions.set(positions.size() - 1, stopPosition);
                   }
-               //else
-                  // predictedPosition = project(predictedPosition, predictedHeading, -1*Math.signum(predictedVelocity));
                }
             
             }
@@ -636,10 +560,6 @@ package Pempek;
          if(surfWave.safePoints == null || surfStatsChanged)
          {
             
-         //This is coded up much more complexly than necessary
-         //(I *could* just say 'go to the end point') so that I get
-         //nice painting graphics. ;-). Actually, so that I follow
-         //the exact path the PrecisePrediction followed.
          
          
             ArrayList forwardPoints = predictPositions(surfWave, 1, ORBIT);
@@ -676,22 +596,6 @@ package Pempek;
                safeDirection = -1;
             }
             Point2D.Double bestPoint = (Point2D.Double)bestPoints.get(ticksAhead);
-         //  if(ticksAhead == bestPoints.size() - 1
-         //    && ticksAhead > 0){
-         //       Point2D.Double previousPoint = (Point2D.Double)bestPoints.get(ticksAhead - 1);
-         //       double absBearing =absoluteBearing(previousPoint, bestPoint);
-         //       double turn =  Utils.normalRelativeAngle(wallSmoothing(bestPoint,absBearing, safeDirection) - absBearing);
-         //       double maxTurn = Math.toRadians(10 - 0.75*8);
-         //       turn = limit(-maxTurn, turn , maxTurn);
-         //       Point2D.Double destPoint = project(bestPoint, absBearing + turn, 28);
-         //       // if(_fieldRect.contains(destPoint))
-         //       bestPoints.add(destPoint);
-         //       // else
-         //       // bestPoints.remove(ticksAhead);
-         //    }
-         //    else
-         //    {
-         //      // //  Point2D.Double bestPoint = (Point2D.Double)bestPoints.get(ticksAhead);
             
             while(bestPoints.indexOf(bestPoint) != -1)
                bestPoints.remove(bestPoints.size() - 1);
@@ -719,7 +623,6 @@ package Pempek;
                //if it's not 20 units away we won't reach max velocity
                   return goToPoint;
             }
-         //if we don't find a point 20 units away, return the end point
             return (Point2D.Double)surfWave.safePoints.get(surfWave.safePoints.size() - 1);
                
          
@@ -733,7 +636,6 @@ package Pempek;
        
          int index = getFactorIndex(surfWave,checkPosition);
          
-      	//the maximum possible width - sqrt(40*40 + 40*40) = 25 - diagonal
          double botWidthAtEnd = 2*Math.atan(25/checkPosition.distance(surfWave.fireLocation));
       	
          double binWidth = maxEscapeAngle(surfWave.bulletVelocity)/MIDDLE_BIN;
@@ -772,11 +674,6 @@ package Pempek;
       		 
       }
        public boolean segEmpty(double[] bins, double threshHold){
-         // boolean segEmpty = true;
-         // for(int i = 1; i < BINS && segEmpty; i++)
-            // segEmpty = (bins[i] == 0.0);
-           
-         // return segEmpty;
          return bins[0] < threshHold;
       }
        public static void normalize(double[] bins){
@@ -870,7 +767,6 @@ package Pempek;
        private double absoluteBearing(Point2D source, Point2D target) {
          return Math.atan2(target.getX() - source.getX(), target.getY() - source.getY());
       }
-    // This can be defined as an inner class if you want.
        class EnemyWave {
          Point2D.Double fireLocation;
          long fireTime;
@@ -886,7 +782,6 @@ package Pempek;
       
    
    
-   //non-iterative wallsmoothing by Simonton - to save your CPUs
       public static final double HALF_PI = Math.PI / 2;
       public static final double WALKING_STICK = 160;
       public static final double WALL_MARGIN = 19;
@@ -895,29 +790,17 @@ package Pempek;
       public static final double N = 600 - WALL_MARGIN;
       public static final double E = 800 - WALL_MARGIN;
    
-    // angle = the angle you'd like to go if there weren't any walls
-    // oDir  =  1 if you are currently orbiting the enemy clockwise
-    //         -1 if you are currently orbiting the enemy counter-clockwise
-    // returns the angle you should travel to avoid walls
        double wallSmoothing(Point2D.Double botLocation, double angle, int oDir) {
-         // if(!_fieldRect.contains(project(botLocation,angle + Math.PI*(oDir + 1),WALKING_STICK))){
          angle = smoothWest(N - botLocation.y, angle - HALF_PI, oDir) + HALF_PI;
          angle = smoothWest(E - botLocation.x, angle + Math.PI, oDir) - Math.PI;
          angle = smoothWest(botLocation.y - S, angle + HALF_PI, oDir) - HALF_PI;
          angle = smoothWest(botLocation.x - W, angle, oDir);
-         
-         // for bots that could calculate an angle that is pointing pretty far
-         // into a corner, these three lines may be necessary when travelling
-         // counter-clockwise (since the smoothing above may have moved the 
-         // walking stick into another wall)
          angle = smoothWest(botLocation.y - S, angle + HALF_PI, oDir) - HALF_PI;
          angle = smoothWest(E - botLocation.x, angle + Math.PI, oDir) - Math.PI;
          angle = smoothWest(N - botLocation.y, angle - HALF_PI, oDir) + HALF_PI;
-         // }
          return angle;
       }
    
-    // smooths agains the west wall
        static double smoothWest(double dist, double angle, int oDir) {
          if (dist < -WALKING_STICK * Math.sin(angle)) {
             return Math.acos(oDir * dist / WALKING_STICK) - oDir * HALF_PI;
@@ -926,16 +809,11 @@ package Pempek;
       }
    
    
-    // CREDIT: from CassiusClay, by PEZ
-    //   - returns point length away from sourceLocation, at angle
-    // robowiki.net?CassiusClay
        public static Point2D.Double project(Point2D.Double sourceLocation, double angle, double length) {
          return new Point2D.Double(sourceLocation.x + Math.sin(angle) * length,
             sourceLocation.y + Math.cos(angle) * length);
       }
    
-    // got this from RaikoMicro, by Jamougha, but I think it's used by many authors
-    //  - returns the absolute angle (in radians) from source to target points
        public static double absoluteBearing(Point2D.Double source, Point2D.Double target) {
          return Math.atan2(target.x - source.x, target.y - source.y);
       }
@@ -1074,7 +952,6 @@ package Pempek;
             rollingDepth = 0.2;
          else rollingDepth = 0.1;
         
-        // _weight = 1;
          _weight = weight;
       }
        SingleBuffer getStats(double latVel, double distance, double tsdc, double accel, double tsvc, double dl20){
@@ -1123,9 +1000,6 @@ package Pempek;
       }
    	
    
-   /**
-    * onScannedRobot: What to do when you see another robot
-    */
        public void onScannedRobot(ScannedRobotEvent e) {
       
          double headingRadians;
@@ -1135,7 +1009,6 @@ package Pempek;
          
          boolean rammer = (eDistance = e.getDistance()) < 100 
             || bot.getTime() < 20;
-      // 	|| Math.cos(absbearing - eHeadingRadians)*e.getVelocity() < -5 ;
        
          
          Rectangle2D.Double field = new Rectangle2D.Double(17,17,766,566);
@@ -1169,13 +1042,10 @@ package Pempek;
          double w = eHeadingRadians - lastEnemyHeading;
          do
          {
-            // db+=(20-3*bulletPower); 
             if( index > 1 ){
                speed = (short)data.charAt(index*2 );
                w = ((short)data.charAt(index--*2 - 1))/angleScale;    
             }
-            // eX+= (speed*Math.sin(ww));
-            // eY+= (speed*Math.cos(ww));
          }while ((db+=(20-3*bulletPower))< Point2D.distance(0,0,eX+= (speed*Math.sin(ww+=w)),eY+= (speed*Math.cos(ww))) 
          && field.contains(eX + bot.getX() , eY + bot.getY()));         
          
@@ -1217,15 +1087,12 @@ package Pempek;
 	
     class RaikoGun {
    
-   //	private static final double BEST_DISTANCE = 525;
-   //	private static boolean flat = true;
       private static double bearingDirection = 1, lastLatVel, lastVelocity, /*lastReverseTime, circleDir = 1, enemyFirePower,*/ enemyEnergy, enemyDistance, lastVChangeTime, enemyLatVel, enemyVelocity/*, enemyFireTime, numBadHits*/;
       private static Point2D.Double enemyLocation;
       private static final int GF_ZERO = 15;
       private static final int GF_ONE = 30;
       private static String enemyName;
       private static int[][][][][][] guessFactors = new int[3][5][3][3][8][GF_ONE+1]; 
-   //	private static double numWins;
    
       private AdvancedRobot bot;
    
@@ -1242,11 +1109,9 @@ package Pempek;
        public void onScannedRobot(ScannedRobotEvent e) {
       
       
-      /*-------- setup data -----*/
          if (enemyName == null){
          
             enemyName = e.getName();	
-         //			restoreData();		
          }
          Point2D.Double robotLocation = new Point2D.Double(bot.getX(), bot.getY());
          double theta;
@@ -1254,45 +1119,9 @@ package Pempek;
          enemyDistance = e.getDistance();
          enemyLocation = projectMotion(robotLocation, enemyAbsoluteBearing, enemyDistance);
       
-      //        if ((enemyEnergy -= e.getEnergy()) >= 0.1 && enemyEnergy <= 3.0) {
-      //            enemyFirePower = enemyEnergy;
-      //			enemyFireTime = bot.getTime();
-      //		}
-      
          enemyEnergy = e.getEnergy();
       
          Rectangle2D.Double BF = new Rectangle2D.Double(18, 18, 764, 564);
-      
-      //		/* ---- Movement ---- */
-      //		
-      //		Point2D.Double newDestination;
-      //		
-      //		double distDelta = 0.02 + Math.PI/2 + (enemyDistance > BEST_DISTANCE  ? -.1 : .5);
-      //		
-      //		while (!BF.contains(newDestination = projectMotion(robotLocation, enemyAbsoluteBearing + circleDir*(distDelta-=0.02), 170)));
-      //
-      //		theta = 0.5952*(20D - 3D*enemyFirePower)/enemyDistance;
-      //		if ( (flat && Math.random() > Math.pow(theta, theta)) || distDelta < Math.PI/5 || (distDelta < Math.PI/3.5 && enemyDistance < 400) ){
-      //			circleDir = -circleDir;
-      //			lastReverseTime = getTime();
-      //		}
-      //		
-      //		theta = absoluteBearing(robotLocation, newDestination) - getHeadingRadians();
-      //		setAhead(Math.cos(theta)*100);
-      //		setTurnRightRadians(Math.tan(theta));
-      //		
-      
-      /* ------------- Fire control ------- */
-      
-      /*
-      	To explain the below; if the enemy's absolute acceleration is
-      	zero then we segment on time since last velocity change, lateral 
-      	acceleration and lateral velocity.
-      	If their absolute acceleration is non zero then we segment on absolute
-      	acceleration and absolute velocity.
-      	Regardless we segment on walls (near/far approach to walls) and distance.
-      	I'm trying to have my cake and eat it, basically. :-)		
-      */
          MicroWave w = new MicroWave();
       
          lastLatVel = enemyLatVel;
@@ -1332,7 +1161,6 @@ package Pempek;
       	
          w.firePosition = robotLocation;
          w.enemyAbsBearing = enemyAbsoluteBearing;
-      //now using PEZ' near-wall segment
          w.waveGuessFactors = guessFactors[accelIndex][bestGF][vIndex][BF.contains(projectMotion(robotLocation, enemyAbsoluteBearing + w.bearingDirection*GF_ZERO, enemyDistance)) ? 0 : BF.contains(projectMotion(robotLocation, enemyAbsoluteBearing + .5*w.bearingDirection*GF_ZERO, enemyDistance)) ? 1 : 2][distanceIndex];
       
        
@@ -1352,15 +1180,7 @@ package Pempek;
          bot.setTurnRadarRightRadians(Utils.normalRelativeAngle(enemyAbsoluteBearing - bot.getRadarHeadingRadians()) * 2);
       
       }
-   //    public void onHitByBullet(HitByBulletEvent e) {
-   //		/* 
-   //		The infamous Axe-hack
-   //	 	see: http://robowiki.net/?Musashi 
-   //		*/
-   //		if ((double)(bot.getTime() - lastReverseTime) > enemyDistance/e.getVelocity() && enemyDistance > 200 && !flat) 
-   //	    	flat = (++numBadHits/(bot.getRoundNum()+1) > 1.1);
-   //    }
-   
+ 
    
        private static Point2D.Double projectMotion(Point2D.Double loc, double heading, double distance){
       
@@ -1372,34 +1192,6 @@ package Pempek;
       }
    
    
-   //	public void onWin(WinEvent e){
-   //		numWins++;
-   //		saveData();
-   //	}
-   //	public void onDeath(DeathEvent e){
-   //		saveData();	
-   //	}
-   
-   //	//Stole Kawigi's smaller save/load methods
-   //	private void restoreData(){
-   //		try
-   //		{
-   //			ObjectInputStream in = new ObjectInputStream(new GZIPInputStream(new FileInputStream(bot.getDataFile(enemyName))));
-   //			guessFactors = (int[][][][][][])in.readObject();
-   //			in.close();
-   //		} catch (Exception ex){flat = false;}
-   //	}
-   
-   //	private void saveData()
-   //	{
-   //		if (flat && numWins/(getRoundNum()+1) < .7 && getNumRounds() == getRoundNum()+1)
-   //		try{
-   //			ObjectOutputStream out = new ObjectOutputStream(new GZIPOutputStream(new RobocodeFileOutputStream(getDataFile(enemyName))));
-   //			out.writeObject(guessFactors);
-   //			out.close();
-   //		}
-   //		catch (IOException ex){}
-   //	}
    
    
        class MicroWave extends Condition
